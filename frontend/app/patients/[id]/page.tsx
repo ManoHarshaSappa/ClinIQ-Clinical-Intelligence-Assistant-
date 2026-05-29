@@ -1,17 +1,68 @@
+"use client";
+
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { AlertTriangle } from "lucide-react";
-import { getPatient } from "@/lib/api";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AlertTriangle, Loader2 } from "lucide-react";
+import { getPatient, type PatientDetail } from "@/lib/api";
 import { PatientTabs } from "@/components/PatientTabs";
 import { getSpecialtyBg, getSpecialtyBorder } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
-export default async function PatientDetailPage({ params }: { params: { id: string } }) {
-  let data;
-  try {
-    data = await getPatient(params.id);
-  } catch {
-    notFound();
+export default function PatientDetailPage() {
+  const params = useParams();
+  const [data, setData] = useState<PatientDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPatient() {
+      try {
+        setLoading(true);
+        const patientData = await getPatient(params.id as string);
+        setData(patientData);
+        console.log('Patient data loaded:', patientData);
+      } catch (error) {
+        console.error('Failed to fetch patient:', error);
+        setError('Patient not found or failed to load');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (params.id) {
+      fetchPatient();
+    }
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-3 text-blue-600">
+            <Loader2 className="w-6 h-6 animate-spin" />
+            <span>Loading patient details...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="p-8 max-w-6xl mx-auto">
+        <Link href="/patients" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1 mb-6">
+          ← All Patients
+        </Link>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <div className="text-red-600 font-medium mb-2">Patient Not Found</div>
+          <div className="text-red-500 text-sm mb-4">{error || 'Could not load patient details'}</div>
+          <Link href="/patients" className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">
+            Back to Patients
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const { patient, extracted_info, documents } = data;
