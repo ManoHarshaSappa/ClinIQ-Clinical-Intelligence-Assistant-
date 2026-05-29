@@ -1,26 +1,73 @@
+"use client";
+
 import Link from "next/link";
-import { getPatients } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { getPatients, type Patient } from "@/lib/api";
 import { PatientCard } from "@/components/PatientCard";
-import { Users } from "lucide-react";
+import { Users, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default async function PatientsPage({
-  searchParams,
-}: {
-  searchParams: { specialty?: string };
-}) {
-  let patients: Awaited<ReturnType<typeof getPatients>> = [];
-  try {
-    patients = await getPatients();
-  } catch {
+export default function PatientsPage() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeSpecialty, setActiveSpecialty] = useState("all");
+
+  useEffect(() => {
+    async function fetchPatients() {
+      try {
+        setLoading(true);
+        const patientsData = await getPatients();
+        setPatients(patientsData);
+        console.log('Patients loaded successfully:', patientsData.length);
+      } catch (error) {
+        console.error('Failed to fetch patients:', error);
+        setError('Failed to load patients. Please refresh the page.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPatients();
+  }, []);
+
+  useEffect(() => {
+    // Get specialty from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const specialty = urlParams.get('specialty') || 'all';
+    setActiveSpecialty(specialty);
+  }, []);
+
+  if (loading) {
     return (
-      <div className="p-8 text-center text-red-500">
-        Could not connect to the backend. Make sure the FastAPI server is running.
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-3 text-blue-600">
+            <Loader2 className="w-6 h-6 animate-spin" />
+            <span>Loading patients...</span>
+          </div>
+        </div>
       </div>
     );
   }
 
-  const activeSpecialty = searchParams.specialty ?? "all";
+  if (error) {
+    return (
+      <div className="p-8 max-w-6xl mx-auto">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <div className="text-red-600 font-medium mb-2">Error Loading Patients</div>
+          <div className="text-red-500 text-sm mb-4">{error}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const specialties = Array.from(
     new Set(patients.map((p) => p.medical_specialty).filter(Boolean))
   ) as string[];
@@ -46,7 +93,11 @@ export default async function PatientsPage({
 
       {/* Specialty filter */}
       <div className="flex gap-2 mb-6 flex-wrap">
-        <Link href="/patients"
+        <button
+          onClick={() => {
+            setActiveSpecialty("all");
+            window.history.pushState({}, '', '/patients');
+          }}
           className={cn(
             "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
             activeSpecialty === "all"
@@ -54,9 +105,14 @@ export default async function PatientsPage({
               : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
           )}>
           All ({patients.length})
-        </Link>
+        </button>
         {specialties.map((s) => (
-          <Link key={s} href={`/patients?specialty=${encodeURIComponent(s)}`}
+          <button
+            key={s}
+            onClick={() => {
+              setActiveSpecialty(s);
+              window.history.pushState({}, '', `/patients?specialty=${encodeURIComponent(s)}`);
+            }}
             className={cn(
               "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
               activeSpecialty === s
@@ -64,7 +120,7 @@ export default async function PatientsPage({
                 : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
             )}>
             {s} ({patients.filter((p) => p.medical_specialty === s).length})
-          </Link>
+          </button>
         ))}
       </div>
 
