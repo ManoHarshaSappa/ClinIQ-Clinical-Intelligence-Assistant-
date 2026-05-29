@@ -6,7 +6,6 @@ import { Users, FileText, Database, Activity, AlertTriangle, Upload, Shield, Pil
 import { getStats, getPatients, type Patient, type StatsResponse } from "@/lib/api";
 import { getSpecialtyBg, getSpecialtyBorder } from "@/lib/utils";
 import { FileUpload } from "@/components/FileUpload";
-import { MCPDashboard } from "@/components/MCPDashboard";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<StatsResponse>({
@@ -76,10 +75,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* MCP Clinical Intelligence Dashboard */}
-      <div className="mb-8">
-        <MCPDashboard />
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: recent patients + specialty chart */}
