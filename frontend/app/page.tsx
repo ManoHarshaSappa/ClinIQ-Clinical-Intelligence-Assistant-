@@ -1,18 +1,41 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { Users, FileText, Database, Activity, AlertTriangle, Upload, Shield, Pill } from "lucide-react";
-import { getStats, getPatients } from "@/lib/api";
+import { getStats, getPatients, type Patient, type StatsResponse } from "@/lib/api";
 import { getSpecialtyBg, getSpecialtyBorder } from "@/lib/utils";
 import { FileUpload } from "@/components/FileUpload";
+import { MCPDashboard } from "@/components/MCPDashboard";
 
-export default async function DashboardPage() {
-  let stats = { total_patients: 0, total_documents: 0, total_embeddings: 0, specialty_breakdown: {} as Record<string, number> };
-  let recentPatients: Awaited<ReturnType<typeof getPatients>> = [];
+export default function DashboardPage() {
+  const [stats, setStats] = useState<StatsResponse>({
+    total_patients: 0,
+    total_documents: 0,
+    total_embeddings: 0,
+    specialty_breakdown: {} as Record<string, number>
+  });
+  const [recentPatients, setRecentPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    [stats, recentPatients] = await Promise.all([getStats(), getPatients()]);
-  } catch {
-    // backend may be down — show zeros
-  }
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const [statsData, patientsData] = await Promise.all([getStats(), getPatients()]);
+        setStats(statsData);
+        setRecentPatients(patientsData);
+        console.log('Dashboard data loaded successfully:', { statsData, patientsCount: patientsData.length });
+      } catch (error) {
+        console.error('Dashboard data loading error:', error);
+        // Keep default values
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const maxSpecialtyCount = Math.max(...Object.values(stats.specialty_breakdown), 1);
   const critical = recentPatients.filter((p) => (p.allergy_count ?? 0) > 1);
@@ -25,6 +48,12 @@ export default async function DashboardPage() {
         <p className="text-slate-500 mt-1">
           {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
         </p>
+        {loading && (
+          <div className="mt-2 flex items-center gap-2 text-blue-600">
+            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-sm">Loading dashboard data...</span>
+          </div>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -45,6 +74,11 @@ export default async function DashboardPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* MCP Clinical Intelligence Dashboard */}
+      <div className="mb-8">
+        <MCPDashboard />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
