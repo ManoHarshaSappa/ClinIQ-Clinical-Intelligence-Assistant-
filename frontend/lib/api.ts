@@ -1,4 +1,15 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    return "/api";
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}/api`;
+  }
+
+  return "http://localhost:3000/api";
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────
 
@@ -124,27 +135,27 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export async function uploadFile(file: File): Promise<{ patient_id: string }> {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch(`${BASE_URL}/upload`, { method: "POST", body: form });
+  const res = await fetch(`${getApiBaseUrl()}/upload`, { method: "POST", body: form });
   return handleResponse(res);
 }
 
 export async function getStats(): Promise<StatsResponse> {
-  const res = await fetch(`${BASE_URL}/stats`, { cache: "no-store" });
+  const res = await fetch(`${getApiBaseUrl()}/stats`, { cache: "no-store" });
   return handleResponse(res);
 }
 
 export async function getPatients(): Promise<Patient[]> {
-  const res = await fetch(`${BASE_URL}/patients`, { cache: "no-store" });
+  const res = await fetch(`${getApiBaseUrl()}/patients`, { cache: "no-store" });
   return handleResponse(res);
 }
 
 export async function getPatient(id: string): Promise<PatientDetail> {
-  const res = await fetch(`${BASE_URL}/patients/${id}`, { cache: "no-store" });
+  const res = await fetch(`${getApiBaseUrl()}/patients/${id}`, { cache: "no-store" });
   return handleResponse(res);
 }
 
 export async function sendChat(question: string, patientId?: string): Promise<ChatResponse> {
-  const res = await fetch(`${BASE_URL}/chat`, {
+  const res = await fetch(`${getApiBaseUrl()}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question, patient_id: patientId }),
@@ -153,17 +164,17 @@ export async function sendChat(question: string, patientId?: string): Promise<Ch
 }
 
 export async function searchPatients(q: string): Promise<{ results: SearchResult[] }> {
-  const res = await fetch(`${BASE_URL}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
+  const res = await fetch(`${getApiBaseUrl()}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
   return handleResponse(res);
 }
 
 export async function getInsights(patientId: string): Promise<InsightsResponse> {
-  const res = await fetch(`${BASE_URL}/insights/${patientId}`, { method: "POST" });
+  const res = await fetch(`${getApiBaseUrl()}/insights/${patientId}`, { method: "POST" });
   return handleResponse(res);
 }
 
 export async function checkDrug(patientId: string, drugName: string): Promise<DrugCheckResponse> {
-  const res = await fetch(`${BASE_URL}/drug-check`, {
+  const res = await fetch(`${getApiBaseUrl()}/drug-check`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ patient_id: patientId, drug_name: drugName }),
@@ -172,7 +183,7 @@ export async function checkDrug(patientId: string, drugName: string): Promise<Dr
 }
 
 export async function assessBefast(data: BEFASTData): Promise<EmergencyAssessmentResult> {
-  const res = await fetch(`${BASE_URL}/emergency/assess`, {
+  const res = await fetch(`${getApiBaseUrl()}/emergency/assess`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -181,11 +192,11 @@ export async function assessBefast(data: BEFASTData): Promise<EmergencyAssessmen
 }
 
 export async function getEmergencyPacket(patientId: string): Promise<EmergencyPacket> {
-  const res = await fetch(`${BASE_URL}/emergency/packet/${patientId}`, { method: "POST" });
+  const res = await fetch(`${getApiBaseUrl()}/emergency/packet/${patientId}`, { method: "POST" });
   return handleResponse(res);
 }
 
 export async function getDocumentText(documentId: string): Promise<{ file_name: string; raw_text: string; uploaded_at: string }> {
-  const res = await fetch(`${BASE_URL}/documents/${documentId}/text`, { cache: "no-store" });
+  const res = await fetch(`${getApiBaseUrl()}/documents/${documentId}/text`, { cache: "no-store" });
   return handleResponse(res);
 }

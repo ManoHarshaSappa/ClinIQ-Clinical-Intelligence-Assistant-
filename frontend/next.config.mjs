@@ -2,7 +2,9 @@
 const nextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const connectSrc = isDev
+      ? "'self' ws: wss: http://localhost:3000 http://localhost:8000"
+      : "'self' https: wss:";
 
     return [
       {
@@ -22,7 +24,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ${isDev ? 'http://localhost:8000' : apiUrl};`
+            value: `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src ${connectSrc};`
           }
         ]
       }
@@ -30,9 +32,6 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: []
-  },
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
   }
 };
 
