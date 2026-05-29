@@ -1,0 +1,26 @@
+# Environment
+.env
+.env.local
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+
+# Data (large file — download separately)
+data/mtsamples.csv
+
+# OS
+.DS_Store
+Thumbs.db

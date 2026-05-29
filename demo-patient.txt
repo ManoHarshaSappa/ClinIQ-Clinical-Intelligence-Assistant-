@@ -1,0 +1,47 @@
+PATIENT MEDICAL RECORD
+
+Patient: Jane Smith
+DOB: 03/22/1985
+Age: 39
+Gender: Female
+MRN: 987654321
+
+CHIEF COMPLAINT: Persistent fatigue and frequent urination
+
+HISTORY OF PRESENT ILLNESS:
+Patient presents with a 3-month history of increasing fatigue, frequent urination, and unexplained weight loss of 15 pounds. Reports excessive thirst and blurred vision episodes.
+
+PAST MEDICAL HISTORY:
+- Family history of Type 2 Diabetes (mother)
+- Previous gestational diabetes during pregnancy
+
+MEDICATIONS:
+- Multivitamin daily
+- Birth control pills
+
+ALLERGIES:
+- Sulfonamides (hives)
+- Latex (contact dermatitis)
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 140/85, HR 92, RR 16, Temp 98.4°F, Weight 145 lbs
+General: Alert, appears tired
+HEENT: Dry mucous membranes
+Cardiovascular: Regular rate and rhythm
+Pulmonary: Clear to auscultation
+
+LABORATORY RESULTS:
+- Fasting Glucose: 185 mg/dL (HIGH)
+- HbA1c: 8.2% (HIGH)
+- Urinalysis: Glucose 3+, Ketones negative
+
+ASSESSMENT AND PLAN:
+1. New onset Type 2 Diabetes Mellitus
+   - Start Metformin 500mg twice daily
+   - Diabetes education referral
+   - Follow up in 2 weeks
+2. Hypertension - monitor, lifestyle modifications
+
+Dr. Michael Chen, MD
+Internal Medicine
+Date: 5/28/2026

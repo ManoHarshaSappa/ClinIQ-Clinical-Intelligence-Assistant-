@@ -1,0 +1,51 @@
+PATIENT MEDICAL RECORD
+
+Patient Name: John Doe
+DOB: 01/15/1980
+Age: 44
+Gender: Male
+MRN: 123456789
+
+CHIEF COMPLAINT:
+Chest pain and shortness of breath for the past 2 days.
+
+HISTORY OF PRESENT ILLNESS:
+Patient presents with a 2-day history of chest pain described as squeezing and pressure-like, radiating to the left arm. Associated with shortness of breath on exertion. No nausea or vomiting. Pain is worse with activity and improves with rest.
+
+PAST MEDICAL HISTORY:
+- Hypertension
+- Type 2 Diabetes Mellitus
+- Hyperlipidemia
+
+MEDICATIONS:
+- Lisinopril 10mg daily
+- Metformin 1000mg twice daily
+- Atorvastatin 40mg daily
+
+ALLERGIES:
+- Penicillin (rash)
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 150/90, HR 88, RR 18, Temp 98.6°F, O2 Sat 96% on room air
+General: Alert, oriented, mild distress
+Cardiovascular: Regular rate and rhythm, no murmurs
+Pulmonary: Clear to auscultation bilaterally
+Extremities: No pedal edema
+
+LABORATORY RESULTS:
+- Troponin I: 0.8 ng/mL (elevated)
+- CK-MB: 15 ng/mL (elevated)
+- Total Cholesterol: 220 mg/dL
+- Glucose: 180 mg/dL
+
+ASSESSMENT AND PLAN:
+1. Acute coronary syndrome - likely NSTEMI
+   - Start dual antiplatelet therapy
+   - Heparin protocol
+   - Cardiology consultation
+2. Diabetes mellitus - continue current medication
+3. Hypertension - consider ACE inhibitor adjustment
+
+Dr. Sarah Johnson, MD
+Internal Medicine
+Date: 05/28/2026
