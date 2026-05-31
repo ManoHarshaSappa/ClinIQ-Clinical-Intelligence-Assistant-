@@ -88,20 +88,6 @@ export function MobileNav({ className }: MobileNavProps) {
           </div>
         </div>
 
-        {/* Menu Button for non-home pages */}
-        {!isHomePage && (
-          <button
-            onClick={toggleSidebar}
-            className="flex items-center justify-center w-10 h-10 rounded-lg text-slate-400 hover:text-white hover:bg-[#1E293B] transition-all duration-150 ml-2"
-            aria-label="Toggle navigation menu"
-          >
-            {isSidebarOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
-        )}
       </header>
 
       {/* Spacer for fixed header */}

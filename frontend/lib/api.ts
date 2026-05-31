@@ -3,6 +3,11 @@ function getApiBaseUrl(): string {
     return "/api";
   }
 
+  // Force local development when NODE_ENV is development
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000/api";
+  }
+
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl) {
     return `https://${vercelUrl}/api`;
