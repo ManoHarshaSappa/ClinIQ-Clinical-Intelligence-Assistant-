@@ -102,7 +102,8 @@ export function initBrowserFixes(): void {
 
   // Monitor for failed resource loads (404 errors)
   window.addEventListener('error', (event) => {
-    if (event.message?.includes('404') || event.target?.src?.includes('404')) {
+    const target = event.target as HTMLImageElement | HTMLScriptElement | null;
+    if (event.message?.includes('404') || target?.src?.includes('404')) {
       console.error('Resource load failed - likely extension interference');
       setTimeout(() => {
         handleExtensionInterference();
