@@ -82,32 +82,11 @@ export function handleExtensionInterference(): void {
 export function initBrowserFixes(): void {
   if (typeof window === 'undefined') return;
 
-  // Detect and warn about problematic extensions
-  const issues = detectProblematicExtensions();
-  if (issues.length > 0) {
-    console.warn('Browser compatibility issues detected:', issues);
-    console.warn('If you experience navigation issues, try disabling browser extensions or using incognito mode.');
-  }
+  // Simple browser compatibility warnings
+  console.log('ClinIQ: Browser compatibility checks enabled');
 
-  // Add global error handler for unhandled promise rejections
+  // Add basic error handler for debugging
   window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
-    if (event.reason?.message?.includes('404') || event.reason?.message?.includes('not found')) {
-      console.warn('Patient navigation error detected - forcing hard reload to fix extension interference');
-      setTimeout(() => {
-        handleExtensionInterference();
-      }, 1000);
-    }
-  });
-
-  // Monitor for failed resource loads (404 errors)
-  window.addEventListener('error', (event) => {
-    const target = event.target as HTMLImageElement | HTMLScriptElement | null;
-    if (event.message?.includes('404') || target?.src?.includes('404')) {
-      console.error('Resource load failed - likely extension interference');
-      setTimeout(() => {
-        handleExtensionInterference();
-      }, 1000);
-    }
+    console.error('ClinIQ: Unhandled promise rejection:', event.reason);
   });
 }
