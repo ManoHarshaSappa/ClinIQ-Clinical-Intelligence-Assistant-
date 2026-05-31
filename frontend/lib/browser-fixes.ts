@@ -66,6 +66,18 @@ export function forcePageReload(): void {
   window.location.href = window.location.href + '?nocache=' + Date.now();
 }
 
+// Force hard reload if extension interference detected
+export function handleExtensionInterference(): void {
+  if (typeof window === 'undefined') return;
+
+  // Check for extension-related 404 errors
+  const currentUrl = window.location.href;
+  if (currentUrl.includes('/patients/') && !currentUrl.includes('?fixed=')) {
+    console.warn('Extension interference detected on patient page - forcing hard reload');
+    window.location.href = currentUrl + '?fixed=' + Date.now();
+  }
+}
+
 // Auto-fix common extension issues on app startup
 export function initBrowserFixes(): void {
   if (typeof window === 'undefined') return;
@@ -81,7 +93,20 @@ export function initBrowserFixes(): void {
   window.addEventListener('unhandledrejection', (event) => {
     console.error('Unhandled promise rejection:', event.reason);
     if (event.reason?.message?.includes('404') || event.reason?.message?.includes('not found')) {
-      console.warn('Patient navigation error detected - this may be due to browser extensions or caching issues');
+      console.warn('Patient navigation error detected - forcing hard reload to fix extension interference');
+      setTimeout(() => {
+        handleExtensionInterference();
+      }, 1000);
+    }
+  });
+
+  // Monitor for failed resource loads (404 errors)
+  window.addEventListener('error', (event) => {
+    if (event.message?.includes('404') || event.target?.src?.includes('404')) {
+      console.error('Resource load failed - likely extension interference');
+      setTimeout(() => {
+        handleExtensionInterference();
+      }, 1000);
     }
   });
 }
