@@ -37,11 +37,11 @@ export default function PatientDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
         <div className="flex items-center justify-center h-64">
           <div className="flex items-center gap-3 text-blue-600">
-            <Loader2 className="w-6 h-6 animate-spin" />
-            <span>Loading patient details...</span>
+            <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin" />
+            <span className="text-sm md:text-base">Loading patient details...</span>
           </div>
         </div>
       </div>
@@ -50,14 +50,14 @@ export default function PatientDetailPage() {
 
   if (error || !data) {
     return (
-      <div className="p-8 max-w-6xl mx-auto">
-        <Link href="/patients" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1 mb-6">
+      <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
+        <Link href="/patients" className="hidden lg:inline-flex text-sm text-blue-600 hover:underline items-center gap-1 mb-6">
           ← All Patients
         </Link>
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <div className="text-red-600 font-medium mb-2">Patient Not Found</div>
-          <div className="text-red-500 text-sm mb-4">{error || 'Could not load patient details'}</div>
-          <Link href="/patients" className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 md:p-6 text-center">
+          <div className="text-red-600 font-medium mb-2 text-sm md:text-base">Patient Not Found</div>
+          <div className="text-red-500 text-xs md:text-sm mb-4">{error || 'Could not load patient details'}</div>
+          <Link href="/patients" className="bg-red-600 text-white px-4 py-2.5 md:py-2 rounded-lg text-sm hover:bg-red-700 transition-colors touch-target">
             Back to Patients
           </Link>
         </div>
@@ -69,22 +69,22 @@ export default function PatientDetailPage() {
   const hasAllergies = (extracted_info?.allergies ?? []).length > 0;
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      {/* Back nav */}
-      <Link href="/patients" className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1 mb-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
+      {/* Desktop Back nav - hidden on mobile */}
+      <Link href="/patients" className="hidden lg:inline-flex text-sm text-blue-600 hover:underline items-center gap-1 mb-6">
         ← All Patients
       </Link>
 
       {/* Patient header */}
-      <div className={cn("bg-white rounded-2xl border border-l-4 shadow-sm p-6 mb-6", getSpecialtyBorder(patient.medical_specialty))}>
-        <div className="flex flex-wrap items-center gap-3">
+      <div className={cn("bg-white rounded-xl md:rounded-2xl border border-l-4 shadow-sm p-4 md:p-5 lg:p-6 mb-4 md:mb-6", getSpecialtyBorder(patient.medical_specialty))}>
+        <div className="flex flex-wrap items-center gap-3 md:gap-4">
           {/* Avatar */}
-          <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold border-2 flex-shrink-0", getSpecialtyBg(patient.medical_specialty))}>
+          <div className={cn("w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center text-lg md:text-xl font-bold border-2 flex-shrink-0", getSpecialtyBg(patient.medical_specialty))}>
             {patient.name.charAt(0)}
           </div>
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-slate-900">{patient.name}</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-900">{patient.name}</h1>
             <div className="flex flex-wrap items-center gap-2 mt-1.5">
               {patient.age && (
                 <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
@@ -104,9 +104,9 @@ export default function PatientDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             {hasAllergies && (
-              <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl">
+              <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 px-2.5 md:px-3 py-1.5 rounded-lg md:rounded-xl">
                 <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
                 <span className="text-xs font-semibold text-red-700">
                   {extracted_info!.allergies.length} Allerg{extracted_info!.allergies.length > 1 ? "ies" : "y"}
@@ -114,7 +114,7 @@ export default function PatientDetailPage() {
               </div>
             )}
             <Link href={`/emergency?patient=${patient.id}`}
-              className="text-xs bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition-colors flex items-center gap-1.5">
+              className="text-xs md:text-sm bg-red-600 hover:bg-red-700 text-white px-3 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl font-medium transition-colors flex items-center gap-1.5 touch-target">
               <AlertTriangle className="w-3.5 h-3.5" />
               Emergency
             </Link>

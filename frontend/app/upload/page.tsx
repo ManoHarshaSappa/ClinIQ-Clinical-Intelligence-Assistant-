@@ -3,15 +3,15 @@ import { Upload, FileText, Database, MessageCircle } from "lucide-react";
 
 export default function UploadPage() {
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Upload Medical Records</h1>
-        <p className="text-slate-500 mt-1">Upload multiple patient medical records — AI extracts everything automatically.</p>
+    <div className="p-4 md:p-6 lg:p-8 max-w-4xl mx-auto">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Upload Medical Records</h1>
+        <p className="text-slate-500 mt-1 text-sm md:text-base">Upload multiple patient medical records — AI extracts everything automatically.</p>
       </div>
 
       <FileUpload />
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {[
           {
             icon: FileText,
@@ -32,9 +32,9 @@ export default function UploadPage() {
             color: "text-green-600"
           },
         ].map((f) => (
-          <div key={f.title} className="bg-white rounded-lg border border-slate-200 p-6">
-            <f.icon className={`w-8 h-8 ${f.color} mb-3`} />
-            <h3 className="font-semibold text-slate-900 mb-2">{f.title}</h3>
+          <div key={f.title} className="bg-white rounded-lg border border-slate-200 p-4 md:p-6">
+            <f.icon className={`w-7 h-7 md:w-8 md:h-8 ${f.color} mb-3`} />
+            <h3 className="font-semibold text-slate-900 mb-2 text-sm md:text-base">{f.title}</h3>
             <p className="text-sm text-slate-600">{f.desc}</p>
           </div>
         ))}

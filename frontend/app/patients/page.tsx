@@ -40,11 +40,11 @@ export default function PatientsPage() {
 
   if (loading) {
     return (
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
         <div className="flex items-center justify-center h-64">
           <div className="flex items-center gap-3 text-blue-600">
-            <Loader2 className="w-6 h-6 animate-spin" />
-            <span>Loading patients...</span>
+            <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin" />
+            <span className="text-sm md:text-base">Loading patients...</span>
           </div>
         </div>
       </div>
@@ -53,13 +53,13 @@ export default function PatientsPage() {
 
   if (error) {
     return (
-      <div className="p-8 max-w-6xl mx-auto">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <div className="text-red-600 font-medium mb-2">Error Loading Patients</div>
+      <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 md:p-6 text-center">
+          <div className="text-red-600 font-medium mb-2 text-sm md:text-base">Error Loading Patients</div>
           <div className="text-red-500 text-sm mb-4">{error}</div>
           <button
             onClick={() => window.location.reload()}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+            className="bg-red-600 text-white px-4 py-2.5 md:py-2 rounded-lg text-sm hover:bg-red-700 transition-colors touch-target"
           >
             Retry
           </button>
@@ -78,28 +78,28 @@ export default function PatientsPage() {
       : patients.filter((p) => p.medical_specialty === activeSpecialty);
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Patients</h1>
-          <p className="text-slate-500 text-sm mt-1">{patients.length} total records</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Patients</h1>
+          <p className="text-slate-500 text-sm md:text-base mt-1">{patients.length} total records</p>
         </div>
         <Link href="/upload"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 md:py-2 rounded-xl text-sm font-medium transition-colors touch-target text-center sm:text-left">
           + Upload Record
         </Link>
       </div>
 
       {/* Specialty filter */}
-      <div className="flex gap-2 mb-6 flex-wrap">
+      <div className="flex gap-2 md:gap-3 mb-6 flex-wrap">
         <button
           onClick={() => {
             setActiveSpecialty("all");
             window.history.pushState({}, '', '/patients');
           }}
           className={cn(
-            "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
+            "px-3 md:px-4 py-2 md:py-1.5 rounded-full text-xs md:text-sm font-medium border transition-colors touch-target",
             activeSpecialty === "all"
               ? "bg-blue-600 text-white border-blue-600"
               : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
@@ -114,27 +114,27 @@ export default function PatientsPage() {
               window.history.pushState({}, '', `/patients?specialty=${encodeURIComponent(s)}`);
             }}
             className={cn(
-              "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
+              "px-3 md:px-4 py-2 md:py-1.5 rounded-full text-xs md:text-sm font-medium border transition-colors touch-target",
               activeSpecialty === s
                 ? "bg-blue-600 text-white border-blue-600"
                 : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
             )}>
-            {s} ({patients.filter((p) => p.medical_specialty === s).length})
+            {s.length > 15 ? `${s.substring(0, 15)}...` : s} ({patients.filter((p) => p.medical_specialty === s).length})
           </button>
         ))}
       </div>
 
       {/* Patient grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-24 text-slate-400">
-          <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p className="text-lg font-medium text-slate-500">No patients found</p>
-          <p className="text-sm mt-1">
-            <Link href="/upload" className="text-blue-500 hover:underline">Upload a medical record</Link> to get started.
+        <div className="text-center py-16 md:py-24 text-slate-400">
+          <Users className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 opacity-30" />
+          <p className="text-base md:text-lg font-medium text-slate-500">No patients found</p>
+          <p className="text-sm md:text-base mt-2">
+            <Link href="/upload" className="text-blue-500 hover:underline touch-target">Upload a medical record</Link> to get started.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           {filtered.map((p) => (
             <PatientCard key={p.id} patient={p} />
           ))}

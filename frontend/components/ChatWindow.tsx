@@ -154,33 +154,34 @@ export function ChatWindow({ patientId }: { patientId: string }) {
   };
 
   return (
-    <div className="flex flex-col h-[600px] border rounded-xl overflow-hidden bg-white shadow-sm">
+    <div className="flex flex-col h-[500px] md:h-[600px] border rounded-xl overflow-hidden bg-white shadow-sm">
       {/* Header */}
-      <div className="bg-blue-50 px-4 py-3 border-b flex items-center justify-between">
-        <div>
+      <div className="bg-blue-50 px-3 md:px-4 py-2.5 md:py-3 border-b flex items-center justify-between">
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-blue-800">AI Clinical Chat</p>
-          <p className="text-xs text-blue-500">Answers grounded in patient records only</p>
+          <p className="text-xs text-blue-500 truncate">Answers grounded in patient records only</p>
         </div>
         {/* Auto-speak toggle */}
         <button
           onClick={() => { setAutoSpeak((v) => !v); stopSpeaking(); }}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors
+          className={`flex items-center gap-1.5 text-xs px-2.5 md:px-3 py-1.5 rounded-full border transition-colors touch-target flex-shrink-0
             ${autoSpeak
               ? "bg-blue-600 text-white border-blue-600"
               : "bg-white text-gray-500 border-gray-300 hover:border-blue-400"}`}
           title={autoSpeak ? "AI voice ON — click to turn off" : "AI voice OFF — click to turn on"}
         >
-          {autoSpeak ? "🔊 Voice ON" : "🔇 Voice OFF"}
+          <span className="hidden sm:inline">{autoSpeak ? "🔊 Voice ON" : "🔇 Voice OFF"}</span>
+          <span className="sm:hidden">{autoSpeak ? "🔊" : "🔇"}</span>
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 p-4">
+      <div className="flex-1 overflow-y-auto space-y-3 p-3 md:p-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-4">
-            <p className="text-4xl">💬</p>
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-3 md:space-y-4 px-2 md:px-4">
+            <p className="text-3xl md:text-4xl">💬</p>
             <p className="text-sm font-medium text-slate-600">Ask anything about this patient</p>
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-wrap gap-2 justify-center max-w-md">
               {[
                 "What medications are they on?",
                 "Any allergies I should know?",
@@ -191,9 +192,9 @@ export function ChatWindow({ patientId }: { patientId: string }) {
                 <button
                   key={q}
                   onClick={() => { setInput(q); }}
-                  className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-full transition-colors"
+                  className="text-xs md:text-sm bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-3 py-2 md:py-1.5 rounded-full transition-colors touch-target text-center"
                 >
-                  {q}
+                  {q.length > 25 ? `${q.substring(0, 25)}...` : q}
                 </button>
               ))}
             </div>
@@ -203,9 +204,9 @@ export function ChatWindow({ patientId }: { patientId: string }) {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`rounded-2xl px-4 py-3 text-sm leading-relaxed
+              className={`rounded-xl md:rounded-2xl px-3 md:px-4 py-2.5 md:py-3 text-sm leading-relaxed
                 ${msg.role === "user"
-                  ? "max-w-[75%] bg-blue-500 text-white rounded-br-sm"
+                  ? "max-w-[85%] md:max-w-[75%] bg-blue-500 text-white rounded-br-sm"
                   : "w-full bg-white border border-slate-200 text-slate-800 rounded-bl-sm shadow-sm"}`}
             >
               {msg.role === "user" ? (
@@ -297,22 +298,22 @@ export function ChatWindow({ patientId }: { patientId: string }) {
 
               {/* Speak this message button */}
               {msg.role === "assistant" && (
-                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100">
+                <div className="flex items-center gap-3 mt-2 pt-2 border-t border-slate-100">
                   <button
                     onClick={() => speak(msg.content)}
-                    className="text-xs text-slate-400 hover:text-blue-500 transition-colors"
+                    className="text-xs md:text-sm text-slate-400 hover:text-blue-500 transition-colors touch-target py-1"
                     title="Read aloud"
                   >
                     🔊 Read
                   </button>
                   {msg.sources && msg.sources.length > 0 && (
-                    <details className="text-xs text-slate-400">
-                      <summary className="cursor-pointer hover:text-blue-500 select-none">
+                    <details className="text-xs md:text-sm text-slate-400">
+                      <summary className="cursor-pointer hover:text-blue-500 select-none touch-target py-1">
                         ▶ Sources ({msg.sources.length})
                       </summary>
                       <div className="mt-2 space-y-1.5">
                         {msg.sources.map((s, j) => (
-                          <p key={j} className="bg-slate-50 rounded-lg p-2 border border-slate-200 text-xs text-slate-500 leading-relaxed">
+                          <p key={j} className="bg-slate-50 rounded-lg p-2 md:p-3 border border-slate-200 text-xs md:text-sm text-slate-500 leading-relaxed">
                             {s}...
                           </p>
                         ))}
@@ -327,8 +328,9 @@ export function ChatWindow({ patientId }: { patientId: string }) {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm text-gray-400 animate-pulse">
-              Searching patient records...
+            <div className="bg-gray-100 rounded-xl md:rounded-2xl rounded-bl-sm px-3 md:px-4 py-2.5 text-sm text-gray-400 animate-pulse">
+              <span className="hidden sm:inline">Searching patient records...</span>
+              <span className="sm:hidden">Searching...</span>
             </div>
           </div>
         )}
@@ -337,9 +339,10 @@ export function ChatWindow({ patientId }: { patientId: string }) {
           <div className="flex justify-center">
             <button
               onClick={stopSpeaking}
-              className="text-xs bg-red-50 text-red-500 border border-red-200 px-3 py-1 rounded-full hover:bg-red-100 transition-colors"
+              className="text-xs md:text-sm bg-red-50 text-red-500 border border-red-200 px-3 py-2 md:py-1 rounded-full hover:bg-red-100 transition-colors touch-target"
             >
-              🔴 Speaking... tap to stop
+              🔴 <span className="hidden sm:inline">Speaking... tap to stop</span>
+              <span className="sm:hidden">Tap to stop</span>
             </button>
           </div>
         )}
@@ -348,12 +351,12 @@ export function ChatWindow({ patientId }: { patientId: string }) {
       </div>
 
       {/* Input bar */}
-      <div className="border-t p-3 flex gap-2 bg-gray-50 items-center">
+      <div className="border-t p-2 md:p-3 flex gap-2 bg-gray-50 items-center">
         {/* Mic button */}
         <button
           onClick={toggleMic}
           disabled={isLoading}
-          className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all border
+          className={`flex-shrink-0 w-11 h-11 md:w-10 md:h-10 rounded-full flex items-center justify-center text-lg transition-all border touch-target
             ${isListening
               ? "bg-red-500 text-white border-red-500 animate-pulse shadow-lg shadow-red-200"
               : "bg-white text-gray-500 border-gray-300 hover:border-blue-400 hover:text-blue-500"}`}
@@ -368,13 +371,13 @@ export function ChatWindow({ patientId }: { patientId: string }) {
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && submit()}
           placeholder={isListening ? "Listening... speak now" : "Ask about medications, diagnoses, lab results..."}
           disabled={isLoading}
-          className={`bg-white transition-colors ${isListening ? "border-red-300 ring-1 ring-red-200" : ""}`}
+          className={`bg-white transition-colors min-h-[44px] text-base md:text-sm ${isListening ? "border-red-300 ring-1 ring-red-200" : ""}`}
         />
 
         <Button
           onClick={submit}
           disabled={isLoading || !input.trim()}
-          className="flex-shrink-0"
+          className="flex-shrink-0 touch-target px-4 md:px-3 py-3 md:py-2 text-sm font-medium"
         >
           Send
         </Button>

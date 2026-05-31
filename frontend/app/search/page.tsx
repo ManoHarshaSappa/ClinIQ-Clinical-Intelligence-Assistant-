@@ -320,18 +320,18 @@ export default function SearchPage() {
   }, []);
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header with Analytics */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
+      <div className="mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Advanced Clinical Search</h1>
-            <p className="text-slate-500 mt-1">Intelligent search across all patient records with AI-powered insights.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Advanced Clinical Search</h1>
+            <p className="text-slate-500 mt-1 text-sm md:text-base">Intelligent search across all patient records with AI-powered insights.</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             {searchStats.totalSearches > 0 && (
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-600">{searchStats.totalSearches}</div>
+              <div className="text-center sm:text-right">
+                <div className="text-xl md:text-2xl font-bold text-blue-600">{searchStats.totalSearches}</div>
                 <div className="text-xs text-slate-500">Total Searches</div>
               </div>
             )}
@@ -339,10 +339,11 @@ export default function SearchPage() {
               variant="outline"
               size="sm"
               onClick={() => setRealTimeSearch(!realTimeSearch)}
-              className={cn("text-xs", realTimeSearch && "bg-blue-50 text-blue-700")}
+              className={cn("text-xs touch-target", realTimeSearch && "bg-blue-50 text-blue-700")}
             >
               <TrendingUp className="w-3 h-3 mr-1" />
-              Real-time Search {realTimeSearch ? 'ON' : 'OFF'}
+              <span className="hidden sm:inline">Real-time Search {realTimeSearch ? 'ON' : 'OFF'}</span>
+              <span className="sm:hidden">{realTimeSearch ? 'ON' : 'OFF'}</span>
             </Button>
           </div>
         </div>
@@ -350,16 +351,16 @@ export default function SearchPage() {
 
       {/* Enhanced Search Bar with Suggestions */}
       <div className="relative mb-6">
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
               value={query}
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               onFocus={() => setShowSuggestions(suggestions.length > 0)}
-              placeholder='e.g. "patients with diabetes on Metformin", "cardiac surgery complications"'
-              className="pl-12 pr-4 py-3 bg-white text-sm border-2 border-slate-200 hover:border-blue-300 focus:border-blue-500 rounded-xl"
+              placeholder='e.g. "diabetes on Metformin", "cardiac surgery"'
+              className="pl-10 md:pl-12 pr-4 py-3 md:py-3 bg-white text-sm md:text-base border-2 border-slate-200 hover:border-blue-300 focus:border-blue-500 rounded-xl touch-target"
             />
 
             {/* Search Suggestions Dropdown */}
@@ -375,7 +376,7 @@ export default function SearchPage() {
                         handleSearch(suggestion.text);
                         setShowSuggestions(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center gap-3"
+                      className="w-full text-left px-3 py-3 md:py-2 rounded-lg hover:bg-slate-50 flex items-center gap-3 touch-target"
                     >
                       <div className="flex-shrink-0">
                         {suggestion.type === 'history' ? (
@@ -385,7 +386,7 @@ export default function SearchPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm text-slate-700 truncate">{suggestion.text}</div>
+                        <div className="text-sm md:text-base text-slate-700 truncate">{suggestion.text}</div>
                         {suggestion.count && (
                           <div className="text-xs text-slate-400">{suggestion.count} results</div>
                         )}
@@ -397,40 +398,43 @@ export default function SearchPage() {
             )}
           </div>
 
-          <Button
-            onClick={() => handleSearch()}
-            disabled={isLoading || !query.trim()}
-            className="px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl"
-          >
-            {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Searching...
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Search className="w-4 h-4" />
-                Search
-              </div>
-            )}
-          </Button>
+          <div className="flex gap-2 sm:gap-3">
+            <Button
+              onClick={() => handleSearch()}
+              disabled={isLoading || !query.trim()}
+              className="flex-1 sm:flex-initial px-4 md:px-6 py-3 md:py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl touch-target"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span className="hidden sm:inline">Searching...</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Search className="w-4 h-4" />
+                  <span className="hidden sm:inline">Search</span>
+                </div>
+              )}
+            </Button>
 
-          <Button
-            variant="outline"
-            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-            className="rounded-xl"
-          >
-            <Filter className="w-4 h-4" />
-          </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              className="rounded-xl touch-target px-3 py-3 md:px-4 md:py-2"
+            >
+              <Filter className="w-4 h-4" />
+              <span className="hidden md:inline ml-2">Filters</span>
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         {/* Sidebar */}
-        <div className="col-span-12 lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-4 md:space-y-6">
           {/* Quick Actions */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 md:p-5">
+            <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2 text-sm md:text-base">
               <Clock className="w-4 h-4" />
               Recent Searches
             </h3>
@@ -443,7 +447,7 @@ export default function SearchPage() {
                       setQuery(search.query);
                       handleSearch(search.query);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg"
+                    className="w-full text-left px-3 py-2.5 md:py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg touch-target"
                   >
                     <div className="truncate">{search.query}</div>
                     <div className="text-xs text-slate-400">{search.resultsCount} results</div>
@@ -521,12 +525,12 @@ export default function SearchPage() {
         </div>
 
         {/* Main Content */}
-        <div className="col-span-12 lg:col-span-9">
+        <div className="lg:col-span-9">
           {/* Advanced Filters Panel */}
           {showAdvancedFilters && (
-            <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-slate-800">Advanced Filters</h3>
+            <div className="bg-white rounded-xl border border-slate-200 p-4 md:p-6 mb-4 md:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <h3 className="font-semibold text-slate-800 text-sm md:text-base">Advanced Filters</h3>
                 <Button
                   variant="outline"
                   size="sm"
@@ -538,12 +542,13 @@ export default function SearchPage() {
                     sortBy: 'relevance',
                     sortOrder: 'desc'
                   })}
+                  className="touch-target w-full sm:w-auto"
                 >
                   Reset Filters
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Specialty Filter */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Specialty</label>
@@ -608,9 +613,9 @@ export default function SearchPage() {
 
           {/* Results Header */}
           {(searched || results.length > 0) && (
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <h2 className="text-lg font-semibold text-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 md:gap-4 mb-4 md:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4">
+                <h2 className="text-base md:text-lg font-semibold text-slate-800">
                   Search Results ({filteredResults.length})
                 </h2>
                 {query && (
@@ -621,7 +626,7 @@ export default function SearchPage() {
                       const name = prompt('Enter a name for this search:');
                       if (name) saveSearch(name);
                     }}
-                    className="text-xs"
+                    className="text-xs touch-target w-full sm:w-auto"
                   >
                     <Bookmark className="w-3 h-3 mr-1" />
                     Save Search
@@ -634,7 +639,7 @@ export default function SearchPage() {
                   variant="outline"
                   size="sm"
                   onClick={exportResults}
-                  className="text-xs"
+                  className="text-xs touch-target w-full sm:w-auto"
                 >
                   <Download className="w-3 h-3 mr-1" />
                   Export Results
@@ -645,32 +650,34 @@ export default function SearchPage() {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="text-center py-16">
-              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-slate-600 font-medium">Searching patient records...</p>
+            <div className="text-center py-12 md:py-16">
+              <div className="w-10 h-10 md:w-12 md:h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-slate-600 font-medium text-sm md:text-base">Searching patient records...</p>
               <p className="text-sm text-slate-400 mt-2">Using AI to find the most relevant matches</p>
             </div>
           )}
 
           {/* No Results */}
           {!isLoading && searched && filteredResults.length === 0 && (
-            <div className="text-center py-16">
-              <Search className="w-16 h-16 mx-auto mb-4 text-slate-300" />
-              <h3 className="text-lg font-semibold text-slate-700 mb-2">No matching records found</h3>
-              <p className="text-slate-500 mb-4">
+            <div className="text-center py-12 md:py-16 px-4">
+              <Search className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-slate-300" />
+              <h3 className="text-base md:text-lg font-semibold text-slate-700 mb-2">No matching records found</h3>
+              <p className="text-slate-500 mb-4 text-sm md:text-base">
                 No results for <strong>"{query}"</strong> with current filters
               </p>
-              <div className="flex justify-center gap-3">
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <Button
                   variant="outline"
                   onClick={() => setFilters({...filters, similarity: Math.max(0, filters.similarity - 20)})}
                   disabled={filters.similarity <= 20}
+                  className="touch-target w-full sm:w-auto"
                 >
                   Lower Relevance Threshold
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => setShowAdvancedFilters(true)}
+                  className="touch-target w-full sm:w-auto"
                 >
                   Adjust Filters
                 </Button>
@@ -680,19 +687,19 @@ export default function SearchPage() {
 
           {/* Enhanced Results */}
           {filteredResults.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {filteredResults.map((r) => (
                 <div
                   key={r.id}
                   className={cn(
-                    "bg-white rounded-xl border border-l-4 p-6 hover:shadow-lg transition-all group",
+                    "bg-white rounded-xl border border-l-4 p-4 md:p-6 hover:shadow-lg transition-all group",
                     getSpecialtyBorder(r.patient_specialty)
                   )}
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 md:gap-4">
                     {/* Patient Avatar */}
                     <div className={cn(
-                      "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 flex-shrink-0",
+                      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center text-sm font-bold border-2 flex-shrink-0",
                       getSpecialtyBg(r.patient_specialty)
                     )}>
                       {r.patient_name.charAt(0)}
@@ -700,38 +707,40 @@ export default function SearchPage() {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3">
                           <Link
                             href={`/patients/${r.patient_id}`}
-                            className="font-semibold text-slate-900 hover:text-blue-600 transition-colors"
+                            className="font-semibold text-slate-900 hover:text-blue-600 transition-colors text-sm md:text-base touch-target"
                           >
                             {r.patient_name}
                           </Link>
 
-                          {r.patient_specialty && (
-                            <span className={cn(
-                              "text-xs px-3 py-1 rounded-full border font-medium",
-                              getSpecialtyBg(r.patient_specialty)
-                            )}>
-                              {r.patient_specialty}
-                            </span>
-                          )}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {r.patient_specialty && (
+                              <span className={cn(
+                                "text-xs px-2 md:px-3 py-1 rounded-full border font-medium",
+                                getSpecialtyBg(r.patient_specialty)
+                              )}>
+                                {r.patient_specialty.length > 15 ? `${r.patient_specialty.substring(0, 15)}...` : r.patient_specialty}
+                              </span>
+                            )}
 
-                          <div className="flex items-center gap-1 text-xs text-slate-500">
-                            <TrendingUp className="w-3 h-3" />
-                            {Math.round(r.similarity * 100)}% match
+                            <div className="flex items-center gap-1 text-xs text-slate-500">
+                              <TrendingUp className="w-3 h-3" />
+                              {Math.round(r.similarity * 100)}% match
+                            </div>
                           </div>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleBookmark(r.patient_id)}
                             className={cn(
-                              "p-1",
+                              "p-2 touch-target",
                               bookmarkedPatients.includes(r.patient_id) && "text-yellow-600"
                             )}
                           >
@@ -739,7 +748,7 @@ export default function SearchPage() {
                           </Button>
 
                           <Link href={`/patients/${r.patient_id}`}>
-                            <Button variant="ghost" size="sm" className="p-1">
+                            <Button variant="ghost" size="sm" className="p-2 touch-target">
                               <Eye className="w-4 h-4" />
                             </Button>
                           </Link>

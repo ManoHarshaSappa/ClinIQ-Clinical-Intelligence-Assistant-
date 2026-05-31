@@ -100,7 +100,7 @@ export function FileUpload({ compact = false }: FileUploadProps) {
 
     for (let i = 0; i < files.length && (currentCount + newFiles.length) < 10; i++) {
       const file = files[i];
-      if (file.name.match(/\.(pdf|txt|csv)$/i)) {
+      if (file.name.match(/\.(pdf|txt|csv|jpg|jpeg|png|webp)$/i) || file.type.startsWith('image/')) {
         const isDuplicate = checkDuplicate(file, selectedFiles);
         const isHIPAACompliant = checkHIPAACompliance(file);
         const metadata = await analyzeFile(file);
@@ -302,7 +302,7 @@ export function FileUpload({ compact = false }: FileUploadProps) {
     return (
       <div
         className={cn(
-          "border-2 border-dashed rounded-xl text-center transition-colors cursor-pointer p-5",
+          "border-2 border-dashed rounded-xl text-center transition-colors cursor-pointer p-4 md:p-5",
           isDragging ? "border-blue-500 bg-blue-50" : "border-slate-200 hover:border-blue-300"
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
@@ -310,20 +310,21 @@ export function FileUpload({ compact = false }: FileUploadProps) {
         onDrop={onDrop}
       >
         <p className="text-sm text-slate-600 mb-3">
-          Drop files or browse (max 10)
+          Drop files, browse, or take photo (max 10)
         </p>
         <input
           type="file"
-          accept=".pdf,.txt,.csv"
+          accept=".pdf,.txt,.csv,image/*"
+          capture="environment"
           className="hidden"
           id="file-input-compact"
           multiple
           disabled={isProcessing}
           onChange={onFileSelect}
         />
-        <Button asChild disabled={isProcessing} size="sm" className="w-full">
+        <Button asChild disabled={isProcessing} size="sm" className="w-full touch-target py-3 md:py-2">
           <label htmlFor="file-input-compact" className="cursor-pointer">
-            Browse Files
+            📎 Browse Files
           </label>
         </Button>
       </div>
@@ -374,13 +375,13 @@ export function FileUpload({ compact = false }: FileUploadProps) {
           </svg>
         </div>
 
-        <div className="relative p-12 text-center">
-          <div className="text-6xl mb-4 animate-pulse">📋</div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">
+        <div className="relative p-6 md:p-12 text-center">
+          <div className="text-4xl md:text-6xl mb-4 animate-pulse">📋</div>
+          <h2 className="text-lg md:text-xl font-bold text-slate-800 mb-2">
             Advanced Medical Document Processing
           </h2>
           <p className="text-sm text-slate-500 mb-4">
-            Upload up to 10 files (PDF, TXT, CSV) • AI extracts, analyzes, and combines all patient data
+            Upload files, PDFs, or take photos • AI extracts, analyzes, and combines patient data
           </p>
 
           {/* Upload Stats */}
@@ -405,17 +406,19 @@ export function FileUpload({ compact = false }: FileUploadProps) {
 
           <input
             type="file"
-            accept=".pdf,.txt,.csv"
+            accept=".pdf,.txt,.csv,image/*"
+            capture="environment"
             className="hidden"
             id="file-input-multi"
             multiple
             disabled={isProcessing}
             onChange={onFileSelect}
           />
-          <Button asChild disabled={isProcessing} size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+          <Button asChild disabled={isProcessing} size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 touch-target py-3 md:py-2 px-6 md:px-4">
             <label htmlFor="file-input-multi" className="cursor-pointer">
               <Upload className="w-4 h-4 mr-2" />
-              Select Files ({selectedFiles.length}/10)
+              <span className="hidden sm:inline">Select Files ({selectedFiles.length}/10)</span>
+              <span className="sm:hidden">📎 Select Files ({selectedFiles.length}/10)</span>
             </label>
           </Button>
 

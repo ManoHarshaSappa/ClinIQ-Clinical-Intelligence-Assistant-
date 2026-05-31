@@ -15,22 +15,22 @@ export default function EmergencyPage({ searchParams }: { searchParams: { patien
   return (
     <div>
       {/* Hero */}
-      <div className="bg-gradient-to-r from-red-700 to-red-900 px-8 py-8">
+      <div className="bg-gradient-to-r from-red-700 to-red-900 px-4 md:px-8 py-6 md:py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3 md:gap-4 mb-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">Emergency Stroke Assessment</h1>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl md:text-2xl font-bold text-white">Emergency Stroke Assessment</h1>
               <p className="text-red-200 text-sm mt-0.5">BEFAST Screening Tool — Powered by ClinIQ</p>
             </div>
           </div>
 
           {/* Key stat */}
-          <div className="bg-white/10 border border-white/20 rounded-2xl px-5 py-3 inline-flex items-center gap-3">
+          <div className="bg-white/10 border border-white/20 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 flex items-center gap-3">
             <Brain className="w-5 h-5 text-red-200 flex-shrink-0" />
-            <p className="text-white text-sm">
+            <p className="text-white text-sm leading-tight">
               Every <span className="font-bold text-yellow-300">1 minute</span> of stroke =
               <span className="font-bold text-yellow-300"> 1.9 million neurons</span> lost permanently
             </p>
@@ -38,16 +38,16 @@ export default function EmergencyPage({ searchParams }: { searchParams: { patien
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-8 py-8 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-8 space-y-6 md:space-y-8">
 
         {/* The assessment form - NOW ON TOP */}
-        <div className="bg-white rounded-lg p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-white" />
+        <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-red-600 rounded-full flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            <div>
-              <h2 className="font-bold text-slate-800 text-2xl">Start Emergency Assessment</h2>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-bold text-slate-800 text-xl md:text-2xl">Start Emergency Assessment</h2>
               <p className="text-slate-600 text-sm">Complete BEFAST screening in 2 minutes</p>
             </div>
           </div>
@@ -55,13 +55,14 @@ export default function EmergencyPage({ searchParams }: { searchParams: { patien
         </div>
 
         {/* How it works — visual flow */}
-        <div className="bg-slate-50 rounded-lg p-6">
-          <h2 className="font-bold text-slate-800 mb-1">How This Works</h2>
-          <p className="text-slate-500 text-sm mb-6">
+        <div className="bg-slate-50 rounded-lg p-4 md:p-6">
+          <h2 className="font-bold text-slate-800 mb-1 text-lg md:text-xl">How This Works</h2>
+          <p className="text-slate-500 text-sm mb-4 md:mb-6">
             A small clinic with no neurologist on-site becomes a full stroke entry point.
           </p>
 
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Desktop: horizontal flow */}
+          <div className="hidden md:flex flex-wrap items-center gap-2">
             {FLOW_STEPS.map((step, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="flex flex-col items-center text-center w-24">
@@ -77,12 +78,28 @@ export default function EmergencyPage({ searchParams }: { searchParams: { patien
               </div>
             ))}
           </div>
+
+          {/* Mobile: vertical flow */}
+          <div className="md:hidden space-y-3">
+            {FLOW_STEPS.map((step, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${step.color}`}>
+                  <step.icon className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-slate-800">{step.label}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{step.desc}</p>
+                </div>
+                <div className="text-slate-300 font-bold text-lg">{i + 1}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* What is BEFAST */}
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h2 className="font-bold text-white mb-4">What is BEFAST?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="bg-slate-800 rounded-lg p-4 md:p-6">
+          <h2 className="font-bold text-white mb-4 text-lg md:text-xl">What is BEFAST?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             {[
               { letter: "B", label: "Balance",  q: "Sudden loss of balance or coordination?" },
               { letter: "E", label: "Eyes",     q: "Sudden change in vision in one or both eyes?" },
@@ -91,19 +108,19 @@ export default function EmergencyPage({ searchParams }: { searchParams: { patien
               { letter: "S", label: "Speech",   q: "Is speech slurred or strange?" },
               { letter: "T", label: "Time",     q: "Note the exact time symptoms started" },
             ].map((item) => (
-              <div key={item.letter} className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              <div key={item.letter} className="flex items-start gap-3 p-3 md:p-0">
+                <div className="w-10 h-10 md:w-8 md:h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                   {item.letter}
                 </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">{item.label}</p>
-                  <p className="text-slate-400 text-xs">{item.q}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white text-sm md:text-base font-semibold">{item.label}</p>
+                  <p className="text-slate-400 text-xs md:text-sm mt-0.5">{item.q}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-4 border-t border-slate-700">
-            <p className="text-slate-300 text-sm">
+          <div className="mt-4 md:mt-6 pt-4 border-t border-slate-700">
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
               <span className="text-yellow-400 font-bold">Face + Arm + Speech</span> positive together = classic stroke triad.
               If any 3 symptoms are YES → <span className="text-red-400 font-bold">HIGH RISK — Call 911 immediately.</span>
             </p>

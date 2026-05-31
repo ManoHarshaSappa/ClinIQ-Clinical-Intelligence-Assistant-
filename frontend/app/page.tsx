@@ -6,6 +6,7 @@ import { Users, FileText, Database, Activity, AlertTriangle, Upload, Shield, Pil
 import { getStats, getPatients, type Patient, type StatsResponse } from "@/lib/api";
 import { getSpecialtyBg, getSpecialtyBorder } from "@/lib/utils";
 import { FileUpload } from "@/components/FileUpload";
+import { MobileSpecialtyChart } from "@/components/MobileSpecialtyChart";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<StatsResponse>({
@@ -40,10 +41,10 @@ export default function DashboardPage() {
   const critical = recentPatients.filter((p) => (p.allergy_count ?? 0) > 1);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Clinical Dashboard</h1>
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Clinical Dashboard</h1>
         <p className="text-slate-500 mt-1">
           {new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
         </p>
@@ -56,50 +57,50 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
         {[
           { label: "Total Patients", value: stats.total_patients, icon: Users, color: "blue" },
           { label: "Specialties", value: Object.keys(stats.specialty_breakdown).length, icon: Activity, color: "violet" },
           { label: "Documents", value: stats.total_documents, icon: FileText, color: "emerald" },
           { label: "Embeddings", value: stats.total_embeddings.toLocaleString(), icon: Database, color: "amber" },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4 shadow-sm">
-            <div className={`w-12 h-12 rounded-xl bg-${s.color}-50 flex items-center justify-center flex-shrink-0`}>
-              <s.icon className={`w-6 h-6 text-${s.color}-600`} />
+          <div key={s.label} className="bg-white rounded-xl md:rounded-2xl border border-slate-200 p-3 md:p-4 lg:p-5 flex items-center gap-3 md:gap-4 shadow-sm">
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-${s.color}-50 flex items-center justify-center flex-shrink-0`}>
+              <s.icon className={`w-5 h-5 md:w-6 md:h-6 text-${s.color}-600`} />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-slate-900">{s.value}</p>
-              <p className="text-xs text-slate-500">{s.label}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 truncate">{s.value}</p>
+              <p className="text-xs md:text-sm text-slate-500 truncate">{s.label}</p>
             </div>
           </div>
         ))}
       </div>
 
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Left: recent patients + specialty chart */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 md:space-y-6">
           {/* Recent Patients */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-              <h2 className="font-semibold text-slate-800">Recent Patients</h2>
-              <Link href="/patients" className="text-sm text-blue-600 hover:underline">View all →</Link>
+          <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-slate-100">
+              <h2 className="font-semibold text-slate-800 text-base md:text-lg">Recent Patients</h2>
+              <Link href="/patients" className="text-sm md:text-base text-blue-600 hover:underline touch-target">View all →</Link>
             </div>
             <div className="divide-y divide-slate-50">
               {recentPatients.slice(0, 6).map((p) => (
                 <Link key={p.id} href={`/patients/${p.id}`}
-                  className="flex items-center gap-4 px-6 py-3.5 hover:bg-slate-50 transition-colors">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border ${getSpecialtyBg(p.medical_specialty)}`}>
+                  className="flex items-center gap-3 md:gap-4 px-4 md:px-6 py-4 md:py-3.5 hover:bg-slate-50 transition-colors touch-target">
+                  <div className={`w-10 h-10 md:w-9 md:h-9 rounded-full flex items-center justify-center text-xs font-bold border ${getSpecialtyBg(p.medical_specialty)}`}>
                     {p.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 text-sm truncate">{p.name}</p>
-                    <p className="text-xs text-slate-400">{p.medical_specialty ?? "Unknown"}</p>
+                    <p className="font-medium text-slate-900 text-sm md:text-base truncate">{p.name}</p>
+                    <p className="text-xs md:text-sm text-slate-400 truncate">{p.medical_specialty ?? "Unknown"}</p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    {p.age && <span className="text-xs text-slate-400">{p.age}y</span>}
+                    {p.age && <span className="text-xs md:text-sm text-slate-400">{p.age}y</span>}
                     {(p.allergy_count ?? 0) > 0 && (
-                      <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-xs md:text-sm bg-red-100 text-red-600 px-2 py-1 md:py-0.5 rounded-full font-medium">
                         {p.allergy_count} allergies
                       </span>
                     )}
@@ -112,9 +113,16 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Specialty Breakdown */}
+          {/* Mobile Specialty Chart */}
           {Object.keys(stats.specialty_breakdown).length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:hidden">
+              <MobileSpecialtyChart specialtyBreakdown={stats.specialty_breakdown} />
+            </div>
+          )}
+
+          {/* Desktop Specialty Breakdown */}
+          {Object.keys(stats.specialty_breakdown).length > 0 && (
+            <div className="hidden lg:block bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
               <h2 className="font-semibold text-slate-800 mb-5">Patients by Specialty</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left: Circular Progress Indicators */}
@@ -259,20 +267,20 @@ export default function DashboardPage() {
         </div>
 
         {/* Right: alerts + upload */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Critical Alerts */}
           {critical.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-5">
+            <div className="bg-red-50 border border-red-200 rounded-xl md:rounded-2xl p-4 md:p-5">
               <div className="flex items-center gap-2 mb-3">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
-                <h3 className="font-semibold text-red-800 text-sm">High-Allergy Patients</h3>
+                <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
+                <h3 className="font-semibold text-red-800 text-sm md:text-base">High-Allergy Patients</h3>
               </div>
               <div className="space-y-2">
                 {critical.slice(0, 4).map((p) => (
                   <Link key={p.id} href={`/patients/${p.id}`}
-                    className="flex items-center justify-between hover:bg-red-100 rounded-lg px-2 py-1.5 transition-colors">
-                    <span className="text-sm font-medium text-red-900">{p.name}</span>
-                    <span className="text-xs bg-red-200 text-red-700 px-2 py-0.5 rounded-full">
+                    className="flex items-center justify-between hover:bg-red-100 rounded-lg px-3 md:px-2 py-2.5 md:py-1.5 transition-colors touch-target">
+                    <span className="text-sm md:text-base font-medium text-red-900 truncate">{p.name}</span>
+                    <span className="text-xs md:text-sm bg-red-200 text-red-700 px-2 py-1 md:py-0.5 rounded-full flex-shrink-0">
                       {p.allergy_count} allergies
                     </span>
                   </Link>
@@ -282,35 +290,35 @@ export default function DashboardPage() {
           )}
 
           {/* Quick Upload */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Upload className="w-4 h-4 text-slate-600" />
-              <h3 className="font-semibold text-slate-800 text-sm">Quick Upload</h3>
+          <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 shadow-sm p-4 md:p-5">
+            <div className="flex items-center gap-2 mb-3 md:mb-4">
+              <Upload className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
+              <h3 className="font-semibold text-slate-800 text-sm md:text-base">Quick Upload</h3>
             </div>
             <FileUpload compact />
           </div>
 
           {/* Drug Checker shortcut */}
           <Link href="/drug-checker"
-            className="flex items-center gap-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-5 text-white hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <Shield className="w-5 h-5" />
+            className="flex items-center gap-3 md:gap-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl md:rounded-2xl p-4 md:p-5 text-white hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm touch-target">
+            <div className="w-11 h-11 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Shield className="w-5 h-5 md:w-6 md:h-6" />
             </div>
-            <div>
-              <p className="font-semibold text-sm">Drug Interaction</p>
-              <p className="text-blue-200 text-xs">Safety checker tool</p>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm md:text-base">Drug Interaction</p>
+              <p className="text-blue-200 text-xs md:text-sm">Safety checker tool</p>
             </div>
           </Link>
 
           {/* Emergency shortcut */}
           <Link href="/emergency"
-            className="flex items-center gap-4 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-5 text-white hover:from-red-700 hover:to-red-800 transition-all shadow-sm">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="w-5 h-5" />
+            className="flex items-center gap-3 md:gap-4 bg-gradient-to-r from-red-600 to-red-700 rounded-xl md:rounded-2xl p-4 md:p-5 text-white hover:from-red-700 hover:to-red-800 transition-all shadow-sm touch-target">
+            <div className="w-11 h-11 md:w-10 md:h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-5 h-5 md:w-6 md:h-6" />
             </div>
-            <div>
-              <p className="font-semibold text-sm">Stroke Assessment</p>
-              <p className="text-red-200 text-xs">BEFAST emergency tool</p>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm md:text-base">Stroke Assessment</p>
+              <p className="text-red-200 text-xs md:text-sm">BEFAST emergency tool</p>
             </div>
           </Link>
         </div>

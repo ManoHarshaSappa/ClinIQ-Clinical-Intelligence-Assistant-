@@ -93,46 +93,46 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-4 md:space-y-6">
       {/* Patient Info */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 className="font-semibold text-slate-800 mb-4">Patient Information</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="col-span-2">
-            <label className="text-xs font-medium text-slate-600 mb-1 block">Patient Name *</label>
+      <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 shadow-sm p-4 md:p-6">
+        <h3 className="font-semibold text-slate-800 mb-4 text-base md:text-lg">Patient Information</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+          <div className="sm:col-span-2">
+            <label className="text-sm font-medium text-slate-600 mb-2 block">Patient Name *</label>
             <Input value={form.patient_name} onChange={(e) => setForm((f) => ({ ...f, patient_name: e.target.value }))}
-              placeholder="Enter patient name" className="bg-slate-50" />
+              placeholder="Enter patient name" className="bg-slate-50 touch-target text-base md:text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-slate-600 mb-1 block">Age</label>
+            <label className="text-sm font-medium text-slate-600 mb-2 block">Age</label>
             <Input value={form.patient_age} onChange={(e) => setForm((f) => ({ ...f, patient_age: e.target.value }))}
-              placeholder="e.g. 68" type="number" className="bg-slate-50" />
+              placeholder="e.g. 68" type="number" className="bg-slate-50 touch-target text-base md:text-sm" />
           </div>
           <div>
-            <label className="text-xs font-medium text-slate-600 mb-1 block">Symptom Onset *</label>
+            <label className="text-sm font-medium text-slate-600 mb-2 block">Symptom Onset *</label>
             <Input value={form.symptom_onset} onChange={(e) => setForm((f) => ({ ...f, symptom_onset: e.target.value }))}
-              placeholder="e.g. 45 minutes ago" className="bg-slate-50" />
+              placeholder="e.g. 45 minutes ago" className="bg-slate-50 touch-target text-base md:text-sm" />
           </div>
         </div>
       </div>
 
       {/* BEFAST Questions */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 className="font-semibold text-slate-800 mb-5">BEFAST Assessment</h3>
-        <div className="space-y-4">
+      <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 shadow-sm p-4 md:p-6">
+        <h3 className="font-semibold text-slate-800 mb-4 md:mb-5 text-base md:text-lg">BEFAST Assessment</h3>
+        <div className="space-y-5 md:space-y-4">
           {BEFAST_ITEMS.map((item) => (
-            <div key={item.key} className="flex items-start gap-4">
-              <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+            <div key={item.key} className="flex items-start gap-3 md:gap-4 p-3 md:p-0 bg-slate-50 md:bg-transparent rounded-lg md:rounded-none">
+              <div className="w-10 h-10 md:w-9 md:h-9 rounded-xl bg-red-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {item.letter}
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-slate-800 text-sm">{item.label}</p>
-                <p className="text-xs text-slate-500 mb-2">{item.question}</p>
-                <div className="flex gap-2">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-slate-800 text-sm md:text-base">{item.label}</p>
+                <p className="text-sm md:text-xs text-slate-500 mb-3 md:mb-2">{item.question}</p>
+                <div className="flex flex-col sm:flex-row gap-2">
                   {(["yes", "no", "unsure"] as const).map((val) => (
                     <button key={val} onClick={() => setAnswer(item.key, val)}
                       className={cn(
-                        "px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all capitalize",
+                        "px-4 py-3 md:px-3 md:py-1.5 rounded-lg text-sm md:text-xs font-semibold border transition-all capitalize touch-target flex-1 sm:flex-initial",
                         form[item.key] === val
                           ? val === "yes" ? "bg-red-600 text-white border-red-600"
                           : val === "no" ? "bg-green-600 text-white border-green-600"
@@ -148,13 +148,13 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
           ))}
         </div>
 
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <Button onClick={assess} disabled={!canSubmit || isLoading}
-            className="flex-1 bg-red-600 hover:bg-red-700">
+            className="flex-1 bg-red-600 hover:bg-red-700 touch-target py-3 md:py-2 text-base md:text-sm font-semibold">
             {isLoading ? "Assessing..." : "Assess Stroke Risk"}
           </Button>
           {result && (
-            <Button onClick={reset} variant="outline" className="flex-shrink-0">Reset</Button>
+            <Button onClick={reset} variant="outline" className="touch-target py-3 md:py-2 sm:flex-shrink-0">Reset</Button>
           )}
         </div>
       </div>
@@ -164,22 +164,22 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
         const cfg = RISK_CONFIG[result.risk_level];
         const Icon = cfg.icon;
         return (
-          <div className={cn("rounded-2xl border-2 p-6 space-y-4", cfg.bg)}>
+          <div className={cn("rounded-xl md:rounded-2xl border-2 p-4 md:p-6 space-y-4", cfg.bg)}>
             <div className="flex items-center gap-3">
-              <Icon className={cn("w-6 h-6", cfg.text)} />
-              <span className={cn("text-xl font-bold", cfg.text)}>
+              <Icon className={cn("w-6 h-6 md:w-7 md:h-7", cfg.text)} />
+              <span className={cn("text-lg md:text-xl font-bold flex-1", cfg.text)}>
                 {result.risk_level} Risk
               </span>
-              <span className={cn("ml-auto px-3 py-1 rounded-full text-sm font-bold", cfg.badge)}>
+              <span className={cn("px-3 py-1 rounded-full text-sm font-bold flex-shrink-0", cfg.badge)}>
                 Score: {result.risk_score}/5
               </span>
             </div>
 
             {result.risk_level === "High" && (
-              <div className="bg-red-600 text-white rounded-xl p-4 flex items-center gap-3">
-                <Phone className="w-5 h-5 flex-shrink-0" />
-                <div>
-                  <p className="font-bold">CALL 911 IMMEDIATELY</p>
+              <div className="bg-red-600 text-white rounded-xl p-4 md:p-5 flex items-center gap-3">
+                <Phone className="w-6 h-6 md:w-5 md:h-5 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-base md:text-lg">CALL 911 IMMEDIATELY</p>
                   <p className="text-red-200 text-sm">Every minute counts — 1.9 million neurons lost per minute</p>
                 </div>
               </div>
@@ -187,12 +187,12 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
 
             {result.positive_indicators.length > 0 && (
               <div>
-                <p className={cn("text-xs font-semibold uppercase tracking-wide mb-2", cfg.text)}>
+                <p className={cn("text-xs md:text-sm font-semibold uppercase tracking-wide mb-2", cfg.text)}>
                   Positive Indicators
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {result.positive_indicators.map((ind, i) => (
-                    <span key={i} className={cn("text-xs px-2.5 py-1 rounded-full border font-medium", cfg.bg, cfg.text)}>
+                    <span key={i} className={cn("text-xs md:text-sm px-3 py-1.5 md:px-2.5 md:py-1 rounded-full border font-medium", cfg.bg, cfg.text)}>
                       {ind}
                     </span>
                   ))}
@@ -201,28 +201,28 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
             )}
 
             <div>
-              <p className={cn("text-xs font-semibold uppercase tracking-wide mb-2", cfg.text)}>
+              <p className={cn("text-xs md:text-sm font-semibold uppercase tracking-wide mb-2", cfg.text)}>
                 Immediate Actions
               </p>
-              <ol className="space-y-1.5">
+              <ol className="space-y-2 md:space-y-1.5">
                 {result.immediate_actions.map((action, i) => (
-                  <li key={i} className={cn("text-sm flex items-start gap-2", cfg.text)}>
-                    <span className="font-bold flex-shrink-0">{i + 1}.</span>
-                    {action}
+                  <li key={i} className={cn("text-sm md:text-base flex items-start gap-2", cfg.text)}>
+                    <span className="font-bold flex-shrink-0 w-6">{i + 1}.</span>
+                    <span className="flex-1">{action}</span>
                   </li>
                 ))}
               </ol>
             </div>
 
-            <p className={cn("text-sm border-t pt-3", cfg.text, `border-current opacity-30`)}>
+            <p className={cn("text-sm md:text-base border-t pt-3 border-current opacity-30", cfg.text)}>
               {result.clinical_notes}
             </p>
 
             {patientId && (
-              <div className="border-t pt-4">
-                <p className={cn("text-xs font-semibold mb-2", cfg.text)}>Neurologist Handoff Packet</p>
+              <div className="border-t pt-4 border-current opacity-30">
+                <p className={cn("text-sm font-semibold mb-3", cfg.text)}>Neurologist Handoff Packet</p>
                 <Button onClick={generatePacket} disabled={loadingPacket} size="sm" variant="outline"
-                  className="text-xs">
+                  className="text-sm touch-target w-full sm:w-auto">
                   {loadingPacket ? "Generating..." : "Generate Patient Packet"}
                 </Button>
               </div>
@@ -233,16 +233,16 @@ export function EmergencyAssessment({ initialPatientId }: { initialPatientId?: s
 
       {/* Packet */}
       {packet && (
-        <div className="bg-slate-900 rounded-2xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-white text-sm font-semibold">Neurologist Handoff Packet</p>
+        <div className="bg-slate-900 rounded-xl md:rounded-2xl p-4 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+            <p className="text-white text-sm md:text-base font-semibold">Neurologist Handoff Packet</p>
             <button onClick={copyPacket}
-              className="flex items-center gap-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition-colors">
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              className="flex items-center justify-center gap-2 text-sm md:text-xs bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 md:px-3 md:py-1.5 rounded-lg transition-colors touch-target w-full sm:w-auto">
+              {copied ? <Check className="w-4 h-4 md:w-3.5 md:h-3.5" /> : <Copy className="w-4 h-4 md:w-3.5 md:h-3.5" />}
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>
-          <pre className="text-slate-300 text-xs font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-64 overflow-y-auto">
+          <pre className="text-slate-300 text-xs md:text-sm font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-64 md:max-h-80 overflow-y-auto bg-slate-800 rounded p-3">
             {packet}
           </pre>
         </div>

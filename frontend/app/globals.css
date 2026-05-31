@@ -34,3 +34,89 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 }
+
+@layer utilities {
+  /* Mobile-specific utilities */
+  .mobile-container {
+    @apply px-4 md:px-6 lg:px-8;
+  }
+
+  .mobile-spacing {
+    @apply p-3 md:p-4 lg:p-5;
+  }
+
+  .mobile-text {
+    @apply text-sm md:text-base;
+  }
+
+  .mobile-heading {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Mobile sidebar animation */
+  .mobile-sidebar-enter {
+    transform: translateX(-100%);
+  }
+
+  .mobile-sidebar-enter-active {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+  }
+
+  .mobile-sidebar-exit {
+    transform: translateX(0);
+  }
+
+  .mobile-sidebar-exit-active {
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+  }
+
+  /* Prevent scroll when mobile menu is open */
+  .mobile-menu-open {
+    @apply overflow-hidden;
+  }
+
+  /* Hide scrollbar for horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+}
+
+@layer components {
+  /* Mobile-optimized card */
+  .mobile-card {
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm;
+    @apply p-4 md:p-5 lg:p-6;
+  }
+
+  /* Mobile navigation item */
+  .mobile-nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150;
+    @apply text-slate-600 hover:text-slate-900 hover:bg-slate-100;
+    @apply min-h-[44px]; /* Touch target */
+  }
+
+  /* Mobile button styles */
+  .mobile-button {
+    @apply px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150;
+    @apply min-h-[44px] min-w-[44px]; /* Touch target */
+  }
+
+  .mobile-button-primary {
+    @apply mobile-button bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .mobile-button-secondary {
+    @apply mobile-button bg-slate-100 text-slate-700 hover:bg-slate-200;
+  }
+}
