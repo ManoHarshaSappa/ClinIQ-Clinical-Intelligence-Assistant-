@@ -8,6 +8,7 @@ import { getPatient, type PatientDetail } from "@/lib/api";
 import { PatientTabs } from "@/components/PatientTabs";
 import { getSpecialtyBg, getSpecialtyBorder } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export default function PatientDetailPage() {
   const params = useParams();
@@ -16,15 +17,29 @@ export default function PatientDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchPatient() {
+    async function fetchPatient(retryCount = 0) {
       try {
         setLoading(true);
+        setError(null);
+
+        // Add small delay for retries to handle race conditions
+        if (retryCount > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
         const patientData = await getPatient(params.id as string);
         setData(patientData);
-        console.log('Patient data loaded:', patientData);
+        console.log('Patient data loaded successfully:', patientData);
       } catch (error) {
-        console.error('Failed to fetch patient:', error);
-        setError('Patient not found or failed to load');
+        console.error(`Failed to fetch patient (attempt ${retryCount + 1}):`, error);
+
+        // Retry once for network/timing issues
+        if (retryCount < 1) {
+          console.log('Retrying patient fetch...');
+          return fetchPatient(retryCount + 1);
+        }
+
+        setError(`Failed to load patient details. This may be due to browser caching or extension issues. Please try refreshing the page.`);
       } finally {
         setLoading(false);
       }
@@ -69,7 +84,8 @@ export default function PatientDetailPage() {
   const hasAllergies = (extracted_info?.allergies ?? []).length > 0;
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
+    <ErrorBoundary>
+      <div className="p-4 md:p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Desktop Back nav - hidden on mobile */}
       <Link href="/patients" className="hidden lg:inline-flex text-sm text-blue-600 hover:underline items-center gap-1 mb-6">
         ← All Patients
@@ -138,6 +154,7 @@ export default function PatientDetailPage() {
 
       {/* Tabs */}
       <PatientTabs patient={patient} extractedInfo={extracted_info} documents={documents} />
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

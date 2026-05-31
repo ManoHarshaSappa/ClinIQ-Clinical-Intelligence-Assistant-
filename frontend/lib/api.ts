@@ -130,7 +130,18 @@ export interface EmergencyPacket {
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || `Request failed: ${res.status}`);
+    console.error(`API Error: ${res.status} ${res.statusText}`, text);
+
+    // Clear any stale cache on errors
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('patient-cache');
+      } catch (e) {
+        // Ignore localStorage errors
+      }
+    }
+
+    throw new Error(text || `Request failed: ${res.status} - ${res.statusText}`);
   }
   return res.json();
 }
